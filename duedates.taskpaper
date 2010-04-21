@@ -1,0 +1,25 @@
+
+Assigning due dates :
+	Items due today will get the today tag.
+	Items due in the next 5 days get the upcoming tag.
+	Items due prior to today that are not marked done get the overdue tag.
+	- Enter due dates in YYYY-MM-DD format
+	- This due 5/01/08, should be marked overdue @due(2008-05-01) 
+	- Use today and tomorrow as values.  Script will replace them with actual dates.
+		- this is due today @due(today)
+		- this is due tomorrow @due(tomorrow)
+	- Use same specifiers as repeat tags.  Script will replace them with actual dates.
+		- Do this tomorrow @due(1 day)
+		- Do this in 3 days @due(3 days)
+		- Do this next wednesday @due(wednesday)
+		- Do this next week @due(next week)
+		- Do this in 2 weeks @due(2 weeks)
+		- Do this next month @due(next month)
+		- Do this next year @due(next year)
+	- Error Handling
+		- Invalid date @due(5/25)
+			- Works, generates error tag
+		- No date @due
+			- Works, defaults to today
+		- Invalid specifier @due(yesterday)
+			- Works, generates error tag.

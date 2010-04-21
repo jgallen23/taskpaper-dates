@@ -1,0 +1,28 @@
+Repeating Items:
+   The repeat tag is only processed if the item is marked done, or does not have a due date assigned.
+	- day
+	   - With number, every x days.  Example, every 4 days @due(2008-05-21) @repeat(4 days) @done(2008-05-26)
+	- day name
+		- With number, repeat every x day names.  Example, every other tuesday @repeat(2 tuesdays) @due(2008-05-20) @done(2008-05-26)
+		- Repeat every sunday @repeat(sunday) @due(2008-05-20) @done(2010-04-20)
+	- Allow abbreviations
+		- Every 2 Tuesdays @repeat(2 tues) @due(2008-05-25) @done(2008-05-26)
+		- Repeat every Friday starting this Friday @repeat(fri)
+	- Add "-month" to get "of the month".  Example, every 3rd thursday of month:@repeat(thursday-month:3)
+		- This one is not implemented yet
+	- week
+		- With number, every x weeks. Example, every other week @due(2008-05-15) @repeat(2 weeks) @done(2008-05-26)
+	- month
+		- With number, every x months. Example, every six months @due(2008-05-05) @repeat(6 months) @done(2008-05-26)
+	- year
+		- With number, every x years.  Example, a year later @due(2008-04-15) @repeat(1 year) @done(2008-05-26)
+	- If no due tag present, add one, calculating from today
+		- Repeat every day, starting tomorrow @repeat(1 day) 
+	- Error Handling
+		- Bad specifier with due date @due(2008-05-21) @repeat(yesterday) @done(2008-05-26)
+			- Works, generates error tag.
+		- Bad specifier @repeat(yesterday)
+			- Mostly works, generates error tag, but also empty due tag.
+		- Bad date with repeat @due(5/25) @repeat(month)
+			- Works, generates error tag.
+

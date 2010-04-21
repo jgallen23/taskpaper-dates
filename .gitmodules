@@ -1,0 +1,3 @@
+[submodule "taskpaper"]
+	path = taskpaper
+	url = git://github.com/jgallen23/python-taskpaper.git
