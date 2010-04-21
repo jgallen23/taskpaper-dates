@@ -1,5 +1,5 @@
 Repeating Items:
-   The repeat tag is only processed if the item is marked done, or does not have a due date assigned.
+	The repeat tag is only processed if the item is marked done, or does not have a due date assigned.
 	- day
 	   - With number, every x days.  Example, every 4 days @due(2008-05-21) @repeat(4 days) @done(2008-05-26)
 	- day name
@@ -7,7 +7,7 @@ Repeating Items:
 		- Repeat every sunday @repeat(sunday) @due(2008-05-20) @done(2010-04-20)
 	- Allow abbreviations
 		- Every 2 Tuesdays @repeat(2 tues) @due(2008-05-25) @done(2008-05-26)
-		- Repeat every Friday starting this Friday @repeat(fri)
+		- Repeat every Friday starting this Friday @repeat(fri) @due(today) @done(2010-04-21)
 	- Add "-month" to get "of the month".  Example, every 3rd thursday of month:@repeat(thursday-month:3)
 		- This one is not implemented yet
 	- week

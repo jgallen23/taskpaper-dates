@@ -4,7 +4,7 @@ Assigning due dates :
 	Items due in the next 5 days get the upcoming tag.
 	Items due prior to today that are not marked done get the overdue tag.
 	- Enter due dates in YYYY-MM-DD format
-	- This due 5/01/08, should be marked overdue @due(2008-05-01) 
+	- This due 5/01/08, should be marked overdue @due(2008-05-01) @upcoming
 	- Use today and tomorrow as values.  Script will replace them with actual dates.
 		- this is due today @due(today)
 		- this is due tomorrow @due(tomorrow)

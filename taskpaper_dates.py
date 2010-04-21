@@ -41,6 +41,7 @@ def change_friendly_dates(tp):
 def add_friendly_tags(tp):
     tasks = tp.filter_by_tag("due")
     for task in tasks:
+        clean_tags(task, ('overdue','today','upcoming'))
         today = datetime.date.today()
         try:
             due = parse_date(task.tags['due'])
@@ -69,17 +70,22 @@ def process_repeating(tp):
             if not new_due:
                 tasks.tags['error'] = 'invalid repeat'
                 continue
-            print task.tags['repeat'],due, new_due
             task.tags['due'] = format_date(new_due)
             clean_tags(task, ('done',))
 
 def process_file(url):
     tp = parse_taskpaper(url)
+    return process_tp(tp)
 
+def process_tp(tp):
     change_friendly_dates(tp)
     process_repeating(tp)
     add_friendly_tags(tp)
     return tp
+
+def process_string(tp_string):
+    tp = parse_taskpaper_from_string(tp_string)
+    return process_tp(tp)
 
 def main(args):
     url = args[0]
