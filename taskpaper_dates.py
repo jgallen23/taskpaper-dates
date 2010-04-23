@@ -134,7 +134,6 @@ def process_repeating(tp):
             due = tp.get_tag_value('due')
             repeat = tp.get_tag_value('repeat')
             new_due = parse_date(repeat, parse_date(due).timetuple())
-            print due, repeat, new_due
             if not new_due:
                 tp.add_tag('error', 'invalid repeat')
                 return
