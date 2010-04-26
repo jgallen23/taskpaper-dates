@@ -7,6 +7,30 @@ import datetime
 from time import mktime
 import re
 
+class UtcTzinfo(datetime.tzinfo):
+  def utcoffset(self, dt): return datetime.timedelta(0)
+  def dst(self, dt): return datetime.timedelta(0)
+  def tzname(self, dt): return 'UTC'
+  def olsen_name(self): return 'UTC'
+
+class EstTzinfo(datetime.tzinfo):
+  def utcoffset(self, dt): return datetime.timedelta(hours=-5)
+  def dst(self, dt): return datetime.timedelta(0)
+  def tzname(self, dt): return 'EST+05EDT'
+  def olsen_name(self): return 'US/Eastern'
+
+class PstTzinfo(datetime.tzinfo):
+  def utcoffset(self, dt): return datetime.timedelta(hours=-8)
+  def dst(self, dt): return datetime.timedelta(0)
+  def tzname(self, dt): return 'PST+08PDT'
+  def olsen_name(self): return 'US/Pacific'
+
+TZINFOS = {
+  'utc': UtcTzinfo(),
+  'est': EstTzinfo(),
+  'pst': PstTzinfo(),
+}
+
 DATE_FORMAT = "%Y-%m-%d"
 UPCOMING_DAYS = 2
 cal = pdc.Constants()
@@ -92,7 +116,7 @@ def parse_date(date_string, initial = None):
     else:
         struct = date_parser.parse(date_string, initial)
         if struct[1] == 1:
-            return datetime.date.fromtimestamp(mktime(struct[0]))
+            return datetime.datetime.fromtimestamp(mktime(struct[0]), TZINFOS['pst']).date()
         else:
             return None
 
@@ -102,14 +126,15 @@ def change_friendly_dates(tp):
     if tp.has_tag("due"):
         val = tp.get_tag_value('due')
         if val == None:
-            tp.set_tag_value('due', format_date(datetime.date.today()))
+            today = datetime.datetime.now(TZINFOS['pst']).date()
+            tp.set_tag_value('due', format_date(today))
         else:
             tp.set_tag_value('due', format_date(parse_date(val)))
 
 def add_friendly_tags(tp):
-    if tp.has_tag('due'):
+    if not tp.has_tag('done') and tp.has_tag('due'):
         clean_tags(tp, ('overdue','today','upcoming'))
-        today = datetime.date.today()
+        today = datetime.datetime.now(TZINFOS['pst']).date()
         try:
             due = parse_date(tp.get_tag_value('due'))
             if due < today:
