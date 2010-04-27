@@ -6,6 +6,7 @@ import parsedatetime.parsedatetime_consts as pdc
 import datetime
 from time import mktime
 import re
+import logging
 
 class UtcTzinfo(datetime.tzinfo):
   def utcoffset(self, dt): return datetime.timedelta(0)
@@ -112,11 +113,14 @@ def parse_date(date_string, initial = None):
     datetime.datetime(2010, 4, 1, 0, 0)
     """
     if date_string.find("-") != -1:
-        return datetime.datetime.strptime(date_string, DATE_FORMAT).date()
+        return datetime.datetime.strptime(date_string, DATE_FORMAT) - TZINFOS['pst'].utcoffset(None)
     else:
         struct = date_parser.parse(date_string, initial)
         if struct[1] == 1:
-            return datetime.datetime.fromtimestamp(mktime(struct[0]), TZINFOS['pst']).date()
+            d = datetime.datetime.fromtimestamp(mktime(struct[0]), TZINFOS['pst']).date()
+            logging.info("%s(%s) => %s(%s)" % (date_string, initial, struct[0], d))
+            return d
+            #return datetime.date.fromtimestamp(mktime(struct[0]))
         else:
             return None
 
@@ -135,18 +139,18 @@ def add_friendly_tags(tp):
     if not tp.has_tag('done') and tp.has_tag('due'):
         clean_tags(tp, ('overdue','today','upcoming'))
         today = datetime.datetime.now(TZINFOS['pst']).date()
-        try:
-            due = parse_date(tp.get_tag_value('due'))
-            if due < today:
-                tp.add_tag('overdue')
-            elif due == today:
-                tp.add_tag('today')
-            else:
-                td = due - today
-                if td.days <= UPCOMING_DAYS:
-                    tp.add_tag('upcoming')
-        except:
-            tp.add_tag('error', 'invalid date')
+        #try:
+        due = parse_date(tp.get_tag_value('due')).date()
+        if due < today:
+            tp.add_tag('overdue')
+        elif due == today:
+            tp.add_tag('today')
+        else:
+            td = due - today
+            if td.days <= UPCOMING_DAYS:
+                tp.add_tag('upcoming')
+        #except:
+            #tp.add_tag('error', 'invalid date')
 
 def clean_tags(task, tags):
     for tag in tags:
